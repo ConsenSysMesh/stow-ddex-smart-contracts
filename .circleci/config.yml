@@ -27,19 +27,18 @@ jobs:
           - v1-dependencies-
       - run: node -v
       - run: npm --version
-
-      # start testrpc so that prepare runs without errors
-      - run:
-          command: npm start
-          background: true
-      - run: sleep 5
-
       - run: npm ci
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+
+      # start testrpc so that prepare runs without errors
+      - run:
+          command: npm start
+          background: true
+      - run: sleep 5
 
       - run:
           name: "JS linter"
