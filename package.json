@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Smart contracts that facilitate the exchange of data",
   "main": "truffle-config.js",
-
   "scripts": {
     "start": "npm run start:testrpc",
     "start:testrpc": "ganache-cli -p 7545 -i 5777",

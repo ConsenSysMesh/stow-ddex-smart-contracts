@@ -1,6 +1,6 @@
 const LinniaOffers = artifacts.require('./LinniaOffers.sol');
 
-contract('LinniaOffers', accounts => {
+contract('LinniaOffers', () => {
   let instance;
 
   beforeEach('deploy a new offers contract', async () => {
