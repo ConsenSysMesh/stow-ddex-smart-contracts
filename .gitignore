@@ -69,3 +69,6 @@ typings/
 coverage.json
 
 reports
+
+# DS-STORE
+.DS_Store
