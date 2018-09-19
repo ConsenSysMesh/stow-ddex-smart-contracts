@@ -6,18 +6,15 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  * @title Linnia Offer Contract
  */
  contract LinniaStaking is Ownable{
-
-     /** Struct of Stake
+      /** Struct of Stake
     * @prop hasStaked - boolean to see if user has staked or not *
     * @prop amountStaked - the amount staked by the user *
     */
-
-    /** Stake amount
+     /** Stake amount
     * @dev can be changed by owner*
     */
     uint public stakeAmount = 100;
-
-      /** Struct of Stake
+       /** Struct of Stake
     * @prop hasStaked - boolean to see if user has staked or not *
     * @prop amountStaked - the amount staked by the user *
     */
@@ -29,19 +26,15 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
      event LinniaUserStaked(
         uint stakedAmount, address indexed staker
     );
-
-     event LinniaUserWithdrawedStake(
+      event LinniaUserWithdrawedStake(
         uint stakedAmount, address indexed staker
     );
-
-     LINToken public token;
+      LINToken public token;
      LinniaHub public hub;
-
-     /* All stakes */
+      /* All stakes */
     /* user address => stake */
     mapping(address => Stake) public stakes;
-
-     /* Modifiers */
+      /* Modifiers */
      modifier onlyUser() {
         require(hub.usersContract().isUser(msg.sender) == true);
         _;
@@ -54,21 +47,18 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         require(!checkStake(msg.sender));
         _;
     }
-
-     modifier hasStaked() {
+      modifier hasStaked() {
         require(checkStake(msg.sender));
         _;
     }
-
-     /* Constructor */
+      /* Constructor */
     constructor(LINToken _token, LinniaHub _hub) public {
         token = _token;
         hub = _hub;
     }
      /* Fallback function */
     function () public { }
-
-     /**
+      /**
     * @dev stakes balance in this contract, creates stake and emits stake event
     */
     function makeStake()
@@ -89,8 +79,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         emit LinniaUserStaked(stakeAmount, msg.sender);
         return true;
     }
-
-    function withdrawStake()
+     function withdrawStake()
         hasStaked
         onlyUser
         external
@@ -108,24 +97,20 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
             emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
             return true;
         }
-
-      /** Check if user is staked
+       /** Check if user is staked
     * @param staker - address of whom to be checked*
     */
-
-    function checkStake(address staker)
+     function checkStake(address staker)
         view
         public
         returns(bool)
         {
             return stakes[staker].hasStaked;
         }
-
-      /** Change stake price
+       /** Change stake price
     * @param newAmount to change stake price to, only if owner
     */  
-
-    function updateStake(uint newAmount)
+     function updateStake(uint newAmount)
         onlyOwner
         external
         returns(bool)
@@ -134,5 +119,4 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
             stakeAmount = newAmount;
             return true;
         }
-
- }
+  }
