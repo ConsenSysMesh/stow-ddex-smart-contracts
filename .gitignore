@@ -68,4 +68,8 @@ typings/
 # Solidity-coverage
 coverage.json
 
+# DS_Store
+
+*.DS_Store
+
 reports
