@@ -27,6 +27,7 @@ jobs:
           - v1-dependencies-
       - run: node -v
       - run: npm --version
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: npm install truffle
       - run: npm install ganache-cli
 
