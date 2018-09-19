@@ -9,19 +9,21 @@ import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
 
 contract LinniaOffers {
 
-    uint private offerPrice = 1;
-
     /** Struct of an offer being made
     * @prop hasOffered Used to check whether the offer exists *
     * @prop isFullfilled Whether or not the seller has excepted *
+    * @prop amount the amount of LIN being offered *
+    * @prop publicKey the public key to encrypt record data with if excepted *
     */
     struct Offer {
         bool hasOffered;
         bool isFulfilled;
+        uint amount;
+        bytes publicKey;
     }
 
     event LinniaOfferMade(
-        bytes32 indexed dataHash, address indexed buyer
+        bytes32 indexed dataHash, address indexed buyer, uint amount
     );
 
     LINToken public token;
@@ -38,8 +40,8 @@ contract LinniaOffers {
         _;
     }
 
-    modifier hasBalance() {
-        require(token.balanceOf(msg.sender) > offerPrice);
+    modifier hasBalance(uint amount) {
+        require(token.balanceOf(msg.sender) >= amount);
         _;
     }
 
@@ -61,24 +63,26 @@ contract LinniaOffers {
     * @param dataHash The record being made an offer for.
     * @dev Freezes balance being offered in contract, creates offer and emits event
     */
-    function makeOffer(bytes32 dataHash)
+    function makeOffer(bytes32 dataHash, bytes publicKey, uint amount)
         onlyUser
-        hasBalance
+        hasBalance(amount)
         hasNotOffered(dataHash)
         public
         returns (bool)
     {
         /* @dev Puts offer balance in escrow */
-        token.transferFrom(msg.sender, address(this), 1);
+        token.transferFrom(msg.sender, address(this), amount);
 
         /* @dev Creates new unfulfilled offer from buyer */
         offers[dataHash][msg.sender] = Offer({
             hasOffered: true,
-            isFulfilled: false
+            isFulfilled: false,
+            publicKey: publicKey,
+            amount: amount
         });
 
         /* @dev Emit event for caching purposes */
-        emit LinniaOfferMade(dataHash, msg.sender);
+        emit LinniaOfferMade(dataHash, msg.sender, amount);
 
         return true;
     }
