@@ -10,8 +10,11 @@ const testDataContent = '{"foo":"bar","baz":42}';
 const testDataHash = eutil.bufferToHex(eutil.sha3(testDataContent));
 const offerAmount = 1;
 
-contract('LinniaOffers', accounts => {
-  let hub, users, token, instance;
+contract('LinniaOffers', (accounts) => {
+  let hub;
+  let users;
+  let token;
+  let instance;
 
   beforeEach('deploy a new offers contract', async () => {
     hub = await LinniaHub.new();
