@@ -102,7 +102,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
                 hasStaked: false,
                 amountStaked: 0
             });
-            /* @dev Approves and then sends stake back to user */
+            /* @dev Sends stake back to user */
             token.transfer(msg.sender, userStakeAmount);
             /* @dev Emit event for withdrawed stake  */
             emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
