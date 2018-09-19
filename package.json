@@ -11,7 +11,7 @@
     "lint:sol": "solium -d contracts",
     "coverage": "solidity-coverage",
     "prepare": "truffle migrate",
-    "lint:tests": "eslint test --format junit -o reports/junit/js-lint-results.xml"
+    "lint:tests": "eslint test"
   },
   "repository": {
     "type": "git",
@@ -29,11 +29,10 @@
   },
   "homepage": "https://github.com/ConsenSys/linnia-ddex-smart-contracts#readme",
   "dependencies": {
-    "@linniaprotocol/linnia-smart-contracts": "^0.1.1",
+    "@linniaprotocol/linnia-smart-contracts": "^0.1.2",
+    "@linniaprotocol/linnia-token-contracts": "^0.1.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^3.0.1",
-    "eslint-plugin-import": "^2.14.0",
-    "openzeppelin-solidity": "^1.12.0"
+    "eslint-plugin-import": "^2.14.0"
   },
   "devDependencies": {
     "ajv": "^6.5.3",
@@ -42,10 +41,13 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.0.1",
     "eslint-loader": "^2.1.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "ethereumjs-util": "^5.2.0",
     "ganache-cli": "^6.1.8",
+    "openzeppelin-solidity": "^1.12.0",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
     "webpack": "^4.19.0"
