@@ -4,13 +4,13 @@ const LinniaStaking = artifacts.require('./LinniaStaking.sol');
 const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
 const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
 const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
-const stakeAmount = 100;
 
 contract('LinniaStaking', (accounts) => {
   let hub;
   let users;
   let token;
   let instance;
+  let stakeAmount;
 
   beforeEach('deploy a new stake contract', async() => {
     hub = await LinniaHub.new();
@@ -21,6 +21,8 @@ contract('LinniaStaking', (accounts) => {
     await token.unpause();
 
     instance = await LinniaStaking.new(token.address, hub.address);
+    await instance.stakeAmount().then(stakeAmountBN => stakeAmount = stakeAmountBN.toNumber())
+    
   });
 
   describe('staking some Linnia:', () => {

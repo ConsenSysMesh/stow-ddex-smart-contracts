@@ -10,7 +10,6 @@ const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/co
 const testDataContent = '{"foo":"bar","baz":42}';
 const testDataHash = eutil.bufferToHex(eutil.sha3(testDataContent));
 const testAmount = 1000;
-const stakeAmount = 100;
 const testPublicKey = '5db5f3b5a602022a5d9a059faff9bd98de81c58c6de8ad6a95636d468536acab87d74d2319f6edaaf27c8061c6b941de3b97768498b1610ae89dd7eb5a7d5ac6';
 
 contract('LinniaOffers', (accounts) => {
@@ -19,6 +18,7 @@ contract('LinniaOffers', (accounts) => {
   let token;
   let staking;
   let instance;
+  let stakeAmount;
 
   beforeEach('deploy a new offers contract', async () => {
     hub = await LinniaHub.new();
@@ -29,6 +29,7 @@ contract('LinniaOffers', (accounts) => {
     await token.unpause();
 
     staking = await LinniaStaking.new(token.address, hub.address);
+    await staking.stakeAmount().then(stakeAmountBN => stakeAmount = stakeAmountBN.toNumber())
 
     instance = await LinniaOffers.new(token.address, hub.address, staking.address);
   });
