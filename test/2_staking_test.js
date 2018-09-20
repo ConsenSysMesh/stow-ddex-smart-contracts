@@ -21,7 +21,9 @@ contract('LinniaStaking', (accounts) => {
     await token.unpause();
 
     instance = await LinniaStaking.new(token.address, hub.address);
-    await instance.stakeAmount().then(stakeAmountBN => stakeAmount = stakeAmountBN.toNumber())
+    await instance.stakeAmount().then(stakeAmountBN => {
+      stakeAmount = stakeAmountBN.toNumber();
+    });
     
   });
 
