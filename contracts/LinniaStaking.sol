@@ -23,15 +23,17 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         uint amountStaked;
     }
     
-     event LinniaUserStaked(
+    event LinniaUserStaked(
         uint stakedAmount, address indexed staker
     );
      
-     event LinniaUserWithdrawedStake(
+    event LinniaUserWithdrawedStake(
         uint stakedAmount, address indexed staker
     );
-      LINToken public token;
-     LinniaHub public hub;
+
+    LINToken public token;
+    LinniaHub public hub;
+
       /* All stakes */
     /* user address => stake */
     mapping(address => Stake) public stakes;
