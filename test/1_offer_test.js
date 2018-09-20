@@ -2,7 +2,7 @@ import eutil from 'ethereumjs-util';
 import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
 const LinniaOffers = artifacts.require('./LinniaOffers.sol');
-const LinniaStaking = artifacts.require('./LinniaStaking.sol')
+const LinniaStaking = artifacts.require('./LinniaStaking.sol');
 const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
 const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
 const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
@@ -42,7 +42,7 @@ contract('LinniaOffers', (accounts) => {
       await instance.makeOffer(testDataHash, testPublicKey, testAmount);
     });
 
-       it('should not allow linnia users with balance to make offers without staking', async () => {
+    it('should not allow linnia users with balance to make offers without staking', async () => {
       await users.register();
       await token.approve(instance.address, testAmount);
       assertRevert(instance.makeOffer(testDataHash, testPublicKey, testAmount));
