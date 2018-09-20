@@ -26,7 +26,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
      event LinniaUserStaked(
         uint stakedAmount, address indexed staker
     );
-      event LinniaUserWithdrawedStake(
+     
+     event LinniaUserWithdrawedStake(
         uint stakedAmount, address indexed staker
     );
       LINToken public token;
@@ -79,7 +80,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         emit LinniaUserStaked(stakeAmount, msg.sender);
         return true;
     }
-     function withdrawStake()
+
+    function withdrawStake()
         hasStaked
         onlyUser
         external
@@ -100,7 +102,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
        /** Check if user is staked
     * @param staker - address of whom to be checked*
     */
-     function isUserStaked(address staker)
+
+    function isUserStaked(address staker)
         view
         public
         returns(bool)
@@ -109,8 +112,9 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         }
        /** Change stake price
     * @param newAmount to change stake price to, only if owner
-    */  
-     function updateStake(uint newAmount)
+    */ 
+
+    function updateStake(uint newAmount)
         onlyOwner
         external
         returns(bool)
