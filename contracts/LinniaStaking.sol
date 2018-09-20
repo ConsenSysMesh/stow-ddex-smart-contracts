@@ -44,11 +44,11 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         _;
     }
      modifier hasNotStaked() {
-        require(!checkStake(msg.sender));
+        require(!isUserStaked(msg.sender));
         _;
     }
       modifier hasStaked() {
-        require(checkStake(msg.sender));
+        require(isUserStaked(msg.sender));
         _;
     }
       /* Constructor */
@@ -100,7 +100,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
        /** Check if user is staked
     * @param staker - address of whom to be checked*
     */
-     function checkStake(address staker)
+     function isUserStaked(address staker)
         view
         public
         returns(bool)

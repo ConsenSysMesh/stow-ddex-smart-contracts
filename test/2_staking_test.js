@@ -38,11 +38,11 @@ contract('LinniaStaking', (accounts) => {
       await users.register();
       await token.approve(instance.address, stakeAmount);
       await instance.makeStake();
-      const isStaked = await instance.checkStake(accounts[0]);
+      const isStaked = await instance.isUserStaked(accounts[0]);
       assert.equal(isStaked, true);
     });
     it('should check if a user is not staked', async() => {
-      const isStaked = await instance.checkStake(accounts[1]);
+      const isStaked = await instance.isUserStaked(accounts[1]);
       assert.equal(isStaked, false);
     });
     it('should change stake price', async() => {
