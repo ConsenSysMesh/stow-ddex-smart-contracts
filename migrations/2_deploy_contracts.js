@@ -6,3 +6,4 @@ const tokenAddress = '';
 module.exports = (deployer, network, accounts) => {
   return deployer.deploy(LinniaOffers, tokenAddress, hubAddress);
 };
+
