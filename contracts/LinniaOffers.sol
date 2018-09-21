@@ -38,7 +38,7 @@ contract LinniaOffers {
     /* Modifiers */
 
     modifier onlyUser() {
-        require(hub.usersContract().isUser(msg.sender) == true);
+        require(hub.usersContract().isUser(msg.sender));
         _;
     }
 
@@ -48,12 +48,12 @@ contract LinniaOffers {
     }
 
     modifier hasNotOffered(bytes32 dataHash) {
-        require(offers[dataHash][msg.sender].hasOffered != true);
+        require(!offers[dataHash][msg.sender].hasOffered);
         _;
     }
 
-    modifier onlyStaked(address user) {
-        require(staking.isUserStaked(user));
+    modifier onlyStaked() {
+        require(staking.isUserStaked(msg.sender));
         _;
     }
 
@@ -75,7 +75,7 @@ contract LinniaOffers {
         onlyUser
         hasBalance(amount)
         hasNotOffered(dataHash)
-        onlyStaked(msg.sender)
+        onlyStaked
         public
         returns (bool)
     {
