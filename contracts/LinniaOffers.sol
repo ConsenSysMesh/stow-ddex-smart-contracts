@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
-import './LinniaStaking.sol';
+import "./LinniaStaking.sol";
 
 /**
  * @title Linnia Offer Contract
