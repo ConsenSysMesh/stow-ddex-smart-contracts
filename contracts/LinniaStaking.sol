@@ -96,7 +96,7 @@ contract LinniaStaking is Ownable {
             amountStaked: 0
         });
         /* @dev Sends stake back to user */
-        token.transfer(msg.sender, userStakeAmount);
+        require(token.transfer(msg.sender, userStakeAmount));
         /* @dev Emit event for withdrawed stake  */
         emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
         return true;
