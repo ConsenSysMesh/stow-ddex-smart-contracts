@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
+import "./LinniaStaking.sol";
 
 /**
  * @title Linnia Offer Contract
@@ -28,6 +29,7 @@ contract LinniaOffers {
 
     LINToken public token;
     LinniaHub public hub;
+    LinniaStaking public staking;
 
     /* All offers being made */
     /* dataHash => buyer address => offer */
@@ -36,7 +38,7 @@ contract LinniaOffers {
     /* Modifiers */
 
     modifier onlyUser() {
-        require(hub.usersContract().isUser(msg.sender) == true);
+        require(hub.usersContract().isUser(msg.sender));
         _;
     }
 
@@ -46,14 +48,20 @@ contract LinniaOffers {
     }
 
     modifier hasNotOffered(bytes32 dataHash) {
-        require(offers[dataHash][msg.sender].hasOffered != true);
+        require(!offers[dataHash][msg.sender].hasOffered);
+        _;
+    }
+
+    modifier onlyStaked() {
+        require(staking.isUserStaked(msg.sender));
         _;
     }
 
     /* Constructor */
-    constructor(LINToken _token, LinniaHub _hub) public {
+    constructor(LINToken _token, LinniaHub _hub, LinniaStaking _staking) public {
         token = _token;
         hub = _hub;
+        staking = _staking;
     }
 
     /* Fallback function */
@@ -67,6 +75,7 @@ contract LinniaOffers {
         onlyUser
         hasBalance(amount)
         hasNotOffered(dataHash)
+        onlyStaked
         public
         returns (bool)
     {
