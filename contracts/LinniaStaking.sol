@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  /**
  * @title Linnia Offer Contract
  */
- contract LinniaStaking is Ownable{
+contract LinniaStaking is Ownable {
       /** Struct of Stake
     * @prop hasStaked - boolean to see if user has staked or not *
     * @prop amountStaked - the amount staked by the user *
@@ -23,32 +23,34 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         uint amountStaked;
     }
     
-     event LinniaUserStaked(
+    event LinniaUserStaked(
         uint stakedAmount, address indexed staker
     );
      
-     event LinniaUserWithdrawedStake(
+    event LinniaUserWithdrawedStake(
         uint stakedAmount, address indexed staker
     );
-      LINToken public token;
-     LinniaHub public hub;
+
+    LINToken public token;
+    LinniaHub public hub;
+
       /* All stakes */
     /* user address => stake */
     mapping(address => Stake) public stakes;
       /* Modifiers */
-     modifier onlyUser() {
+    modifier onlyUser() {
         require(hub.usersContract().isUser(msg.sender) == true);
         _;
     }
-     modifier hasBalance() {
+    modifier hasBalance() {
         require(token.balanceOf(msg.sender) > stakeAmount);
         _;
     }
-     modifier hasNotStaked() {
+    modifier hasNotStaked() {
         require(!isUserStaked(msg.sender));
         _;
     }
-      modifier hasStaked() {
+    modifier hasStaked() {
         require(isUserStaked(msg.sender));
         _;
     }
@@ -63,10 +65,10 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
     * @dev stakes balance in this contract, creates stake and emits stake event
     */
     function makeStake()
+        external
         onlyUser
         hasBalance
         hasNotStaked
-        external
         returns (bool)
     {
         /* @dev Puts stake amount in escrow */
@@ -82,23 +84,23 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
     }
 
     function withdrawStake()
+        external
         hasStaked
         onlyUser
-        external
         returns(bool)
         {   
-            uint userStakeAmount = stakes[msg.sender].amountStaked;
-            /* @dev Updates stake of user back to zero */
-            stakes[msg.sender] = Stake({
-                hasStaked: false,
-                amountStaked: 0
-            });
-            /* @dev Sends stake back to user */
-            token.transfer(msg.sender, userStakeAmount);
-            /* @dev Emit event for withdrawed stake  */
-            emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
-            return true;
-        }
+        uint userStakeAmount = stakes[msg.sender].amountStaked;
+        /* @dev Updates stake of user back to zero */
+        stakes[msg.sender] = Stake({
+            hasStaked: false,
+            amountStaked: 0
+        });
+        /* @dev Sends stake back to user */
+        require(token.transfer(msg.sender, userStakeAmount));
+        /* @dev Emit event for withdrawed stake  */
+        emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
+        return true;
+    }
        /** Check if user is staked
     * @param staker - address of whom to be checked*
     */
@@ -108,19 +110,19 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
         public
         returns(bool)
         {
-            return stakes[staker].hasStaked;
-        }
+        return stakes[staker].hasStaked;
+    }
        /** Change stake price
     * @param newAmount to change stake price to, only if owner
     */ 
 
     function updateStake(uint newAmount)
-        onlyOwner
         external
+        onlyOwner
         returns(bool)
         {
-            /* @dev Creates new stake amount */
-            stakeAmount = newAmount;
-            return true;
-        }
-  }
+        /* @dev Creates new stake amount */
+        stakeAmount = newAmount;
+        return true;
+    }
+}
