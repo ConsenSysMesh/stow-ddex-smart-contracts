@@ -1,8 +1,12 @@
 {
-  "name": "linnia-ddex-smart-contracts",
-  "version": "1.0.0",
+  "name": "@linniaprotocol/linnia-ddex-smart-contracts",
+  "version": "0.1.1",
   "description": "Smart contracts that facilitate the exchange of data",
   "main": "truffle-config.js",
+  "files": [
+    "build",
+    "contracts"
+  ],
   "scripts": {
     "start": "npm run start:testrpc",
     "start:testrpc": "ganache-cli -p 7545 -i 5777",
