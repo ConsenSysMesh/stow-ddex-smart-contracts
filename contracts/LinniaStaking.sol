@@ -2,9 +2,13 @@ pragma solidity 0.4.24;
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./LinniaDDEXHub.sol";
+
  /**
- * @title Linnia Offer Contract
+ * @title Linnia Staking Contract
  */
+
+
 contract LinniaStaking is Ownable {
       /** Struct of Stake
     * @prop hasStaked - boolean to see if user has staked or not *
@@ -33,6 +37,7 @@ contract LinniaStaking is Ownable {
 
     LINToken public token;
     LinniaHub public hub;
+    LinniaDDEXHub public ddexhub;
 
       /* All stakes */
     /* user address => stake */
@@ -54,16 +59,20 @@ contract LinniaStaking is Ownable {
         require(isUserStaked(msg.sender));
         _;
     }
+
       /* Constructor */
-    constructor(LINToken _token, LinniaHub _hub) public {
+    constructor(LINToken _token, LinniaHub _hub, LinniaDDEXHub _ddexhub) public {
         token = _token;
         hub = _hub;
+        ddexhub = _ddexhub;
     }
+
      /* Fallback function */
     function () public { }
       /**
     * @dev stakes balance in this contract, creates stake and emits stake event
     */
+
     function makeStake()
         external
         onlyUser
@@ -101,17 +110,7 @@ contract LinniaStaking is Ownable {
         emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
         return true;
     }
-       /** Check if user is staked
-    * @param staker - address of whom to be checked*
-    */
 
-    function isUserStaked(address staker)
-        view
-        public
-        returns(bool)
-        {
-        return stakes[staker].hasStaked;
-    }
        /** Change stake price
     * @param newAmount to change stake price to, only if owner
     */ 
@@ -124,5 +123,17 @@ contract LinniaStaking is Ownable {
         /* @dev Creates new stake amount */
         stakeAmount = newAmount;
         return true;
+    }
+
+       /** Check if user is staked
+    * @param staker - address of whom to be checked*
+    */
+
+    function isUserStaked(address staker)
+        public
+        view
+        returns(bool)
+        {
+        return stakes[staker].hasStaked;
     }
 }

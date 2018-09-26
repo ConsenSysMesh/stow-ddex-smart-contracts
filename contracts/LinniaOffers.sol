@@ -3,10 +3,12 @@ pragma solidity 0.4.24;
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
 import "./LinniaStaking.sol";
+import "./LinniaDDEXHub.sol";
 
 /**
  * @title Linnia Offer Contract
  */
+
 
 contract LinniaOffers {
 
@@ -30,6 +32,7 @@ contract LinniaOffers {
     LINToken public token;
     LinniaHub public hub;
     LinniaStaking public staking;
+    LinniaDDEXHub public ddexhub;
 
     /* All offers being made */
     /* dataHash => buyer address => offer */
@@ -58,10 +61,11 @@ contract LinniaOffers {
     }
 
     /* Constructor */
-    constructor(LINToken _token, LinniaHub _hub, LinniaStaking _staking) public {
+    constructor(LINToken _token, LinniaHub _hub, LinniaStaking _staking, LinniaDDEXHub _ddexhub) public {
         token = _token;
         hub = _hub;
         staking = _staking;
+        ddexhub = _ddexhub;
     }
 
     /* Fallback function */
@@ -72,11 +76,11 @@ contract LinniaOffers {
     * @dev Freezes balance being offered in contract, creates offer and emits event
     */
     function makeOffer(bytes32 dataHash, bytes publicKey, uint amount)
+        public
         onlyUser
         hasBalance(amount)
         hasNotOffered(dataHash)
         onlyStaked
-        public
         returns (bool)
     {
         /* @dev Puts offer balance in escrow */
