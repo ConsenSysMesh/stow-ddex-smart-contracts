@@ -12,7 +12,7 @@ import "./LinniaStaking.sol";
 
 
 contract LinniaDDEXHub is Ownable, Destructible {
-    
+
     LinniaOffers public offersContract;
     LinniaStaking public stakingContract;
 
@@ -23,7 +23,7 @@ contract LinniaDDEXHub is Ownable, Destructible {
 
     function () public { }
 
-    function setOfferContract(LinniaOffers _offersContract)
+    function setOffersContract(LinniaOffers _offersContract)
         external
         onlyOwner
         returns (bool)

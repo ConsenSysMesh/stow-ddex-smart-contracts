@@ -16,5 +16,10 @@ module.exports = (deployer, network, accounts) => {
      }).then((staking) => {
      	// deploy offers
        return deployer.deploy(LinniaOffers, tokenAddress, hubAddress, staking.address, ddexHubInstance.address);
-     });
+     }).then(() => {
+         // set all the addresses in the ddexhub
+       return ddexHubInstance.setOffersContract(LinniaOffers.address)
+     }).then(() => {
+       return ddexHubInstance.setStakingContract(LinniaStaking.address)
+     })
 };
