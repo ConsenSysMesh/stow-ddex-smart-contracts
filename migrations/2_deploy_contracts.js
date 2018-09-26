@@ -12,14 +12,14 @@ module.exports = (deployer, network, accounts) => {
 	 .then((_ddexHubInstance) => {
 	   ddexHubInstance = _ddexHubInstance;
 	  // deploy staking
-  	   return deployer.deploy(LinniaStaking, tokenAddress, hubAddress, ddexHubInstance.address)
+  	   return deployer.deploy(LinniaStaking, tokenAddress, hubAddress, ddexHubInstance.address);
      }).then((staking) => {
      	// deploy offers
        return deployer.deploy(LinniaOffers, tokenAddress, hubAddress, staking.address, ddexHubInstance.address);
      }).then(() => {
          // set all the addresses in the ddexhub
-       return ddexHubInstance.setOffersContract(LinniaOffers.address)
+       return ddexHubInstance.setOffersContract(LinniaOffers.address);
      }).then(() => {
-       return ddexHubInstance.setStakingContract(LinniaStaking.address)
+       return ddexHubInstance.setStakingContract(LinniaStaking.address);
      })
 };
