@@ -1,11 +1,13 @@
 import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
 const LinniaStaking = artifacts.require('./LinniaStaking.sol');
+const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
 const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
 const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
 const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
 
 contract('LinniaStaking', (accounts) => {
+  let ddexhub;
   let hub;
   let users;
   let token;
@@ -16,11 +18,11 @@ contract('LinniaStaking', (accounts) => {
     hub = await LinniaHub.new();
     users = await LinniaUsers.new(hub.address);
     await hub.setUsersContract(users.address);
-
     token = await LINToken.new();
     await token.unpause();
+    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
 
-    instance = await LinniaStaking.new(token.address, hub.address);
+    instance = await LinniaStaking.new(ddexhub.address);
     await instance.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });

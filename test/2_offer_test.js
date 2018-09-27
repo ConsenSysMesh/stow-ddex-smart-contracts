@@ -3,6 +3,7 @@ import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
 const LinniaOffers = artifacts.require('./LinniaOffers.sol');
 const LinniaStaking = artifacts.require('./LinniaStaking.sol');
+const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
 const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
 const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
 const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
@@ -13,6 +14,7 @@ const testAmount = 1000;
 const testPublicKey = '5db5f3b5a602022a5d9a059faff9bd98de81c58c6de8ad6a95636d468536acab87d74d2319f6edaaf27c8061c6b941de3b97768498b1610ae89dd7eb5a7d5ac6';
 
 contract('LinniaOffers', (accounts) => {
+  let ddexhub;
   let hub;
   let users;
   let token;
@@ -28,12 +30,16 @@ contract('LinniaOffers', (accounts) => {
     token = await LINToken.new();
     await token.unpause();
 
-    staking = await LinniaStaking.new(token.address, hub.address);
+    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
+
+    staking = await LinniaStaking.new(ddexhub.address);
     await staking.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });
+    
+    await ddexhub.setStakingContract(staking.address);
 
-    instance = await LinniaOffers.new(token.address, hub.address, staking.address);
+    instance = await LinniaOffers.new(ddexhub.address);
   });
 
   describe('makeOffer:', () => {
