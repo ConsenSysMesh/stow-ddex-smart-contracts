@@ -15,15 +15,14 @@ contract('LinniaStaking', (accounts) => {
   let stakeAmount;
 
   beforeEach('deploy a new stake contract', async() => {
-    ddexhub = await LinniaDDEXHub.new();
     hub = await LinniaHub.new();
     users = await LinniaUsers.new(hub.address);
     await hub.setUsersContract(users.address);
-
     token = await LINToken.new();
     await token.unpause();
+    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
 
-    instance = await LinniaStaking.new(token.address, hub.address, ddexhub.address);
+    instance = await LinniaStaking.new(ddexhub.address);
     await instance.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });

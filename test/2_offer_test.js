@@ -23,7 +23,6 @@ contract('LinniaOffers', (accounts) => {
   let stakeAmount;
 
   beforeEach('deploy a new offers contract', async () => {
-    ddexhub = await LinniaDDEXHub.new();
     hub = await LinniaHub.new();
     users = await LinniaUsers.new(hub.address);
     await hub.setUsersContract(users.address);
@@ -31,12 +30,16 @@ contract('LinniaOffers', (accounts) => {
     token = await LINToken.new();
     await token.unpause();
 
-    staking = await LinniaStaking.new(token.address, hub.address, ddexhub.address);
+    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
+
+    staking = await LinniaStaking.new(ddexhub.address);
     await staking.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });
+    
+    await ddexhub.setStakingContract(staking.address);
 
-    instance = await LinniaOffers.new(token.address, hub.address, staking.address, ddexhub.address);
+    instance = await LinniaOffers.new(ddexhub.address);
   });
 
   describe('makeOffer:', () => {

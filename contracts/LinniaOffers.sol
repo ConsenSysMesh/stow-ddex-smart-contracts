@@ -2,7 +2,6 @@ pragma solidity 0.4.24;
 
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
-import "./LinniaStaking.sol";
 import "./LinniaDDEXHub.sol";
 
 /**
@@ -29,9 +28,6 @@ contract LinniaOffers {
         bytes32 indexed dataHash, address indexed buyer, uint amount
     );
 
-    LINToken public token;
-    LinniaHub public hub;
-    LinniaStaking public staking;
     LinniaDDEXHub public ddexhub;
 
     /* All offers being made */
@@ -41,12 +37,12 @@ contract LinniaOffers {
     /* Modifiers */
 
     modifier onlyUser() {
-        require(hub.usersContract().isUser(msg.sender));
+        require(ddexhub.hubContract().usersContract().isUser(msg.sender));
         _;
     }
 
     modifier hasBalance(uint amount) {
-        require(token.balanceOf(msg.sender) >= amount);
+        require(ddexhub.tokenContract().balanceOf(msg.sender) >= amount);
         _;
     }
 
@@ -56,15 +52,12 @@ contract LinniaOffers {
     }
 
     modifier onlyStaked() {
-        require(staking.isUserStaked(msg.sender));
+        require(ddexhub.stakingContract().isUserStaked(msg.sender));
         _;
     }
 
     /* Constructor */
-    constructor(LINToken _token, LinniaHub _hub, LinniaStaking _staking, LinniaDDEXHub _ddexhub) public {
-        token = _token;
-        hub = _hub;
-        staking = _staking;
+    constructor(LinniaDDEXHub _ddexhub) public {
         ddexhub = _ddexhub;
     }
 
@@ -84,7 +77,7 @@ contract LinniaOffers {
         returns (bool)
     {
         /* @dev Puts offer balance in escrow */
-        token.transferFrom(msg.sender, address(this), amount);
+        ddexhub.tokenContract().transferFrom(msg.sender, address(this), amount);
 
         /* @dev Creates new unfulfilled offer from buyer */
         offers[dataHash][msg.sender] = Offer({

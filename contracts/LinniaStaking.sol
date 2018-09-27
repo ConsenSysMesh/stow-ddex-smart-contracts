@@ -1,4 +1,5 @@
 pragma solidity 0.4.24;
+
 import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
 import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -35,8 +36,6 @@ contract LinniaStaking is Ownable {
         uint stakedAmount, address indexed staker
     );
 
-    LINToken public token;
-    LinniaHub public hub;
     LinniaDDEXHub public ddexhub;
 
       /* All stakes */
@@ -44,11 +43,11 @@ contract LinniaStaking is Ownable {
     mapping(address => Stake) public stakes;
       /* Modifiers */
     modifier onlyUser() {
-        require(hub.usersContract().isUser(msg.sender) == true);
+        require(ddexhub.hubContract().usersContract().isUser(msg.sender) == true);
         _;
     }
     modifier hasBalance() {
-        require(token.balanceOf(msg.sender) > stakeAmount);
+        require(ddexhub.tokenContract().balanceOf(msg.sender) > stakeAmount);
         _;
     }
     modifier hasNotStaked() {
@@ -61,9 +60,7 @@ contract LinniaStaking is Ownable {
     }
 
       /* Constructor */
-    constructor(LINToken _token, LinniaHub _hub, LinniaDDEXHub _ddexhub) public {
-        token = _token;
-        hub = _hub;
+    constructor(LinniaDDEXHub _ddexhub) public {
         ddexhub = _ddexhub;
     }
 
@@ -81,7 +78,7 @@ contract LinniaStaking is Ownable {
         returns (bool)
     {
         /* @dev Puts stake amount in escrow */
-        token.transferFrom(msg.sender, address(this), stakeAmount);
+        ddexhub.tokenContract().transferFrom(msg.sender, address(this), stakeAmount);
          /* @dev Creates new stake of user */
         stakes[msg.sender] = Stake({
             hasStaked: true,
@@ -105,7 +102,7 @@ contract LinniaStaking is Ownable {
             amountStaked: 0
         });
         /* @dev Sends stake back to user */
-        require(token.transfer(msg.sender, userStakeAmount));
+        require(ddexhub.tokenContract().transfer(msg.sender, userStakeAmount));
         /* @dev Emit event for withdrawed stake  */
         emit LinniaUserWithdrawedStake(userStakeAmount, msg.sender);
         return true;

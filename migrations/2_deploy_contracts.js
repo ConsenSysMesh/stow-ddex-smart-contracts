@@ -8,14 +8,14 @@ const tokenAddress = '0x4cdfbdec0aa003116bf030f249a8a7285cd6a184';
 module.exports = (deployer, network, accounts) => {
 	let ddexHubInstance;
 	// deploy ddexHub
-	return deployer.deploy(LinniaDDEXHub)
+	return deployer.deploy(LinniaDDEXHub, hubAddress, tokenAddress)
 	 .then((_ddexHubInstance) => {
 	   ddexHubInstance = _ddexHubInstance;
 	  // deploy staking
-  	   return deployer.deploy(LinniaStaking, tokenAddress, hubAddress, ddexHubInstance.address);
-     }).then((staking) => {
+  	   return deployer.deploy(LinniaStaking, ddexHubInstance.address);
+     }).then(() => {
      	// deploy offers
-       return deployer.deploy(LinniaOffers, tokenAddress, hubAddress, staking.address, ddexHubInstance.address);
+       return deployer.deploy(LinniaOffers, ddexHubInstance.address);
      }).then(() => {
          // set all the addresses in the ddexhub
        return ddexHubInstance.setOffersContract(LinniaOffers.address);
