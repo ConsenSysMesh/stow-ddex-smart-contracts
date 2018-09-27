@@ -1,7 +1,5 @@
 pragma solidity 0.4.24;
 
-import "@linniaprotocol/linnia-token-contracts/contracts/LINToken.sol";
-import "@linniaprotocol/linnia-smart-contracts/contracts/LinniaHub.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./LinniaDDEXHub.sol";
 
