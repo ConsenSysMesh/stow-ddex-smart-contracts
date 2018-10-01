@@ -14,7 +14,7 @@
     "test": "truffle test",
     "lint:sol": "solium -d contracts",
     "coverage": "solidity-coverage",
-    "prepare": "truffle migrate",
+    "prepare": "truffle migrate --network development",
     "lint:tests": "eslint test"
   },
   "repository": {
