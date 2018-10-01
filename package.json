@@ -36,7 +36,10 @@
     "@linniaprotocol/linnia-smart-contracts": "^0.1.2",
     "@linniaprotocol/linnia-token-contracts": "^0.1.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "truffle-hdwallet-provider": "0.0.5",
+    "truffle-hdwallet-provider-privkey": "^0.2.0",
+    "truffle-privatekey-provider": "^0.1.0"
   },
   "devDependencies": {
     "ajv": "^6.5.3",
