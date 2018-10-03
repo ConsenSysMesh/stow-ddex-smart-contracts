@@ -4,13 +4,13 @@ const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contr
 const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
 const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
 
-contract('LinniaHub', accounts => {
+contract('DDexHub', accounts => {
 
   let ddexhub;
   let hub;
   let token;
 
-  beforeEach('deploy a new LinniaHub contract', async () => {
+  beforeEach('deploy a new DDexHub contract', async () => {
 
     hub = await LinniaHub.new();
 
