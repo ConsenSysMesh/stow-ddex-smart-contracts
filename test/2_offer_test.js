@@ -122,7 +122,7 @@ contract('LinniaOffers', (accounts) => {
     });
   });
 
-  describe('approveOffer():', () => {
+  describe('approveOffer:', () => {
     it('should allow a user to her approve offers', async () => {
       const [ buyer, seller ] = accounts;
       await users.register({ from: buyer });

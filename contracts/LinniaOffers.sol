@@ -26,6 +26,10 @@ contract LinniaOffers {
         bytes32 indexed dataHash, address indexed buyer, uint amount
     );
 
+    event LinniaOfferFulfilled(
+        bytes32 indexed dataHash, address indexed buyer
+    );
+
     LinniaDDEXHub public ddexhub;
 
     /* All offers being made */
@@ -120,6 +124,9 @@ contract LinniaOffers {
         require(ddexhub.tokenContract().transfer(msg.sender, offer.amount));
 
         offers[dataHash][msg.sender].isFulfilled = true;
+
+        /* @dev Emit event for caching purposes */
+        emit LinniaOfferFulfilled(dataHash, msg.sender);
 
         return true;
     }
