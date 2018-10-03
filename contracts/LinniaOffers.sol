@@ -26,6 +26,10 @@ contract LinniaOffers {
         bytes32 indexed dataHash, address indexed buyer, uint amount
     );
 
+    event LinniaOfferFulfilled(
+        bytes32 indexed dataHash, address indexed buyer
+    );
+
     LinniaDDEXHub public ddexhub;
 
     /* All offers being made */
@@ -87,6 +91,42 @@ contract LinniaOffers {
 
         /* @dev Emit event for caching purposes */
         emit LinniaOfferMade(dataHash, msg.sender, amount);
+
+        return true;
+    }
+
+        /**
+    * @param dataHash The record being made an offer for.
+    * @param buyer The address of the offerer
+    * @dev Fulfills an offer and gives the seller the escrowed LIN if the permission has been created
+    */
+    function approveOffer(bytes32 dataHash, address buyer)
+        public
+        onlyStaked
+        returns (bool)
+    {
+        /* @dev only record owner can approve */
+        require(ddexhub.hubContract().recordsContract().recordOwnerOf(dataHash) == msg.sender);
+
+        /* @dev pulls the offer from the contract state */
+        Offer memory offer = offers[dataHash][buyer];
+
+        /* @dev only approve made offers */
+        require(offer.hasOffered);
+
+        // /* @dev only approve unfulfilled offers */
+        require(!offer.isFulfilled);
+
+        // /* @dev make sure the permission has been created */
+        require(ddexhub.hubContract().permissionsContract().checkAccess(dataHash, buyer));
+
+        // /* @dev gives the escrowed balance to the seller/approver */
+        require(ddexhub.tokenContract().transfer(msg.sender, offer.amount));
+
+        offers[dataHash][msg.sender].isFulfilled = true;
+
+        /* @dev Emit event for caching purposes */
+        emit LinniaOfferFulfilled(dataHash, msg.sender);
 
         return true;
     }
