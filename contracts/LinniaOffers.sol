@@ -62,6 +62,11 @@ contract LinniaOffers {
         _;
     }
 
+    modifier isNotFulfilled(bytes32 dataHash) {
+        require(!offers[dataHash][msg.sender].isFulfilled);
+        _;
+    }
+
     modifier onlyStaked() {
         require(ddexhub.stakingContract().isUserStaked(msg.sender));
         _;
@@ -112,6 +117,7 @@ contract LinniaOffers {
         public
         onlyUser
         hasOffered(dataHash)
+        isNotFulfilled(dataHash)
         onlyStaked
         returns (bool)
     {
