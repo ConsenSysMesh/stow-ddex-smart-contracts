@@ -30,6 +30,10 @@ contract LinniaOffers {
         bytes32 indexed dataHash, address indexed buyer
     );
 
+    event LinniaOfferRevoked(
+        bytes32 indexed dataHash
+    );
+
     LinniaDDEXHub public ddexhub;
 
     /* All offers being made */
@@ -50,6 +54,11 @@ contract LinniaOffers {
 
     modifier hasNotOffered(bytes32 dataHash) {
         require(!offers[dataHash][msg.sender].hasOffered);
+        _;
+    }
+
+    modifier hasOffered(bytes32 dataHash) {
+        require(offers[dataHash][msg.sender].hasOffered);
         _;
     }
 
@@ -95,7 +104,31 @@ contract LinniaOffers {
         return true;
     }
 
-        /**
+    /**
+    * @param dataHash The record revoking the offer from.
+    * @dev Revoke offer, unfreezes balance and emit event
+    */
+    function revokeOffer(bytes32 dataHash)
+        public
+        onlyUser
+        hasOffered(dataHash)
+        onlyStaked
+        returns (bool)
+    {
+        
+        /* @dev Set offer as not offered */
+        offers[dataHash][msg.sender].hasOffered = false;
+
+        /* @dev Send escrowed balance back */
+        ddexhub.tokenContract().transferFrom(address(this), msg.sender, offers[dataHash][msg.sender].amount);
+
+        /* @dev Emit event for caching purposes */
+        emit LinniaOfferRevoked(dataHash);
+
+        return true;
+    }
+
+    /**
     * @param dataHash The record being made an offer for.
     * @param buyer The address of the offerer
     * @dev Fulfills an offer and gives the seller the escrowed LIN if the permission has been created
