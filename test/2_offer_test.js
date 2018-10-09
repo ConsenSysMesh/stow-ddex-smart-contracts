@@ -257,4 +257,53 @@ contract('LinniaOffers', (accounts) => {
       await assertRevert(instance.approveOffer(testDataHash, buyer, { from: seller }));
     });
   });
+
+  describe('revokeOffer:', () => {
+    it('should allow to revoke an offer after made it', async () => {
+      await users.register();
+      await token.approve(staking.address, stakeAmount);
+      await staking.makeStake();
+      await token.approve(instance.address, testAmount);
+      await instance.makeOffer(testDataHash, testPublicKey, testAmount);
+      const offer = await instance.offers.call(testDataHash, accounts[0]);
+      const hasOffered = offer[0];
+      assert.equal(hasOffered, true);
+      await instance.revokeOffer(testDataHash);
+      const offer2 = await instance.offers.call(testDataHash, accounts[0]);
+      const hasOffered2 = offer2[0];
+      assert.equal(hasOffered2, false);
+    });
+
+    it('should not allow to revoke an offer from another user', async () => {
+      const [ user1, user2 ] = accounts;
+      await users.register({ from: user1 });
+      await users.register({ from: user2 });
+      await records.addRecord(testDataHash, testMetadata, testDataUri, { from: user2 });
+      await token.transfer(user2, loan, { from: user1 });
+      await token.approve(staking.address, stakeAmount, { from: user1 });
+      await token.approve(staking.address, stakeAmount, { from: user2 });
+      await staking.makeStake({ from: user2 });
+      await staking.makeStake({ from: user1 });
+      await token.approve(instance.address, testAmount, { from: user1 });
+      await instance.makeOffer(testDataHash, testPublicKey, testAmount, { from: user1 });
+      await assertRevert(instance.revokeOffer(testDataHash, { from: user2 }));
+    });
+
+    it('should not allow to revoke an offer already fulfilled', async () => {
+      const [ buyer, seller ] = accounts;
+      await users.register({ from: buyer });
+      await users.register({ from: seller });
+      await records.addRecord(testDataHash, testMetadata, testDataUri, { from: seller });
+      await token.transfer(seller, loan, { from: buyer });
+      await token.approve(staking.address, stakeAmount, { from: buyer });
+      await token.approve(staking.address, stakeAmount, { from: seller });
+      await staking.makeStake({ from: seller });
+      await staking.makeStake({ from: buyer });
+      await token.approve(instance.address, testAmount, { from: buyer });
+      await instance.makeOffer(testDataHash, testPublicKey, testAmount, { from: buyer });
+      await permissions.grantAccess(testDataHash, buyer, 'theNewDataUri', { from: seller });
+      await instance.approveOffer(testDataHash, buyer, { from: seller });
+      await assertRevert(instance.revokeOffer(testDataHash, { from: buyer }));
+    });
+  });
 });

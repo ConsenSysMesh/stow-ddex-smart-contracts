@@ -126,7 +126,7 @@ contract LinniaOffers {
         offers[dataHash][msg.sender].hasOffered = false;
 
         /* @dev Send escrowed balance back */
-        ddexhub.tokenContract().transferFrom(address(this), msg.sender, offers[dataHash][msg.sender].amount);
+        ddexhub.tokenContract().transfer(msg.sender, offers[dataHash][msg.sender].amount);
 
         /* @dev Emit event for caching purposes */
         emit LinniaOfferRevoked(dataHash);
