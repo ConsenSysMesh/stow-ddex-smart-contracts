@@ -263,12 +263,15 @@ contract('LinniaOffers', (accounts) => {
       await users.register();
       await token.approve(staking.address, stakeAmount);
       await staking.makeStake();
+      const initialBalance = await token.balanceOf(accounts[0]);
       await token.approve(instance.address, testAmount);
       await instance.makeOffer(testDataHash, testPublicKey, testAmount);
       const offer = await instance.offers.call(testDataHash, accounts[0]);
       const hasOffered = offer[0];
       assert.equal(hasOffered, true);
       await instance.revokeOffer(testDataHash);
+      const finalBalance = await token.balanceOf(accounts[0]);
+      assert.isTrue(initialBalance.eq(finalBalance))
       const offer2 = await instance.offers.call(testDataHash, accounts[0]);
       const hasOffered2 = offer2[0];
       assert.equal(hasOffered2, false);
