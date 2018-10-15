@@ -31,7 +31,7 @@ contract LinniaOffers {
     );
 
     event LinniaOfferRevoked(
-        bytes32 indexed dataHash
+        bytes32 indexed dataHash, address indexed buyer
     );
 
     LinniaDDEXHub public ddexhub;
@@ -129,7 +129,7 @@ contract LinniaOffers {
         ddexhub.tokenContract().transfer(msg.sender, offers[dataHash][msg.sender].amount);
 
         /* @dev Emit event for caching purposes */
-        emit LinniaOfferRevoked(dataHash);
+        emit LinniaOfferRevoked(dataHash, msg.sender);
 
         return true;
     }
