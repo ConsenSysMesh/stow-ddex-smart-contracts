@@ -1,6 +1,6 @@
 {
   "name": "@linniaprotocol/linnia-ddex-smart-contracts",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Smart contracts that facilitate the exchange of data",
   "main": "truffle-config.js",
   "files": [
