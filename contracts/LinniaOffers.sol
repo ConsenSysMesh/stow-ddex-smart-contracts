@@ -57,7 +57,7 @@ contract LinniaOffers {
         _;
     }
 
-    modifier hasOffered(bytes32 dataHash) {
+    modifier onlyOffered(bytes32 dataHash) {
         require(offers[dataHash][msg.sender].hasOffered);
         _;
     }
@@ -80,16 +80,22 @@ contract LinniaOffers {
     /* Fallback function */
     function () public { }
 
+    /* @dev convenience function to see whether or not the sender has already offered for a record */
+    /* @param dataHash the dataHash of the record thats being checked */
+    function hasOffered(bytes32 dataHash) public view returns (bool) {
+        return offers[dataHash][msg.sender].hasOffered;
+    }
+
     /**
-    * @param dataHash The record being made an offer for.
-    * @dev Freezes balance being offered in contract, creates offer and emits event
+    * @dev abstracts out the offer logic into private method so it can be used by both public functions *
+    * @param dataHash the hash of the record being offered for *
+    * @param publicKey the key that the data will be encrypted with *
+    * @param amount the amount off LIN being offered *
     */
-    function makeOffer(bytes32 dataHash, bytes publicKey, uint amount)
-        public
-        onlyUser
+    function _makeOffer(bytes32 dataHash, bytes publicKey, uint amount)
+        internal
         hasBalance(amount)
         hasNotOffered(dataHash)
-        onlyStaked
         returns (bool)
     {
         /* @dev Puts offer balance in escrow */
@@ -110,18 +116,59 @@ contract LinniaOffers {
     }
 
     /**
+    * @dev Freezes balance being offered in contract, creates offer and emits event
+    * @param dataHash the hash of the record being offered for *
+    * @param publicKey the key that the data will be encrypted with *
+    * @param amount the amount off LIN being offered *
+    */
+    function makeOffer(bytes32 dataHash, bytes publicKey, uint amount)
+        public
+        onlyUser
+        onlyStaked
+        returns (bool)
+    {
+        require(_makeOffer(dataHash, publicKey, amount));
+
+        return true;
+    }
+
+    /**
+    * @dev Makes multiple offers based on the indexes of the arrays being passed in
+    * @param dataHashes the hashes of the records being offered for *
+    * @param publicKey the key that the data will be encrypted with *
+    * @param amounts array of the amounts of lin being offered *
+    */
+
+    function makeOffers(bytes32[] dataHashes, bytes publicKey, uint[] amounts)
+        public
+        onlyUser
+        onlyStaked
+        returns (bool)
+    {
+        /* @dev must be matching amounts of hashes and amounts */
+        require(dataHashes.length == amounts.length);
+
+        /* @dev iterate through pairs, revert if one fails */
+        for (uint i = 0; i < dataHashes.length; i++) {
+            require(_makeOffer(dataHashes[i], publicKey, amounts[i]));
+        }
+
+        return true;
+    }
+
+    /**
     * @param dataHash The record revoking the offer from.
     * @dev Revoke offer, unfreezes balance and emit event
     */
     function revokeOffer(bytes32 dataHash)
         public
         onlyUser
-        hasOffered(dataHash)
+        onlyOffered(dataHash)
         isNotFulfilled(dataHash)
         onlyStaked
         returns (bool)
     {
-        
+
         /* @dev Set offer as not offered */
         offers[dataHash][msg.sender].hasOffered = false;
 

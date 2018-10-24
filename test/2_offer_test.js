@@ -11,12 +11,14 @@ const LinniaRecords = artifacts.require('@linniaprotocol/linnia-smart-contracts/
 const LinniaPermissions = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaPermissions.sol');
 
 const testDataContent = '{"foo":"bar","baz":42}';
+const testDataContentTwo = '{"bar": "baz"}';
 const testDataHash = eutil.bufferToHex(eutil.sha3(testDataContent));
+const testDataHashTwo = eutil.bufferToHex(eutil.sha3(testDataContentTwo));
 const testAmount = 1000;
 const loan = 1000000;
-const testMetadata = 'kjsjakdhjaskh';
-const testDataUri = 'sadnbjkbdsjbkdsbjksakbdjsjkbda';
-const testPublicKey = '5db5f3b5a602022a5d9a059faff9bd98de81c58c6de8ad6a95636d468536acab87d74d2319f6edaaf27c8061c6b941de3b97768498b1610ae89dd7eb5a7d5ac6';
+const testMetadata = 'yessirimmetadata';
+const testDataUri = 'i-am-a-uri';
+const testPublicKey = 'g8R3h9lGMiXkX7o8pxqkkOn1ZO/sE0GDT/daKBSsN1A=';
 
 contract('LinniaOffers', (accounts) => {
   let ddexhub;
@@ -119,6 +121,48 @@ contract('LinniaOffers', (accounts) => {
       await token.approve(instance.address, testAmount);
       await instance.makeOffer(testDataHash, testPublicKey, testAmount);
       await assertRevert(instance.makeOffer(testDataHash, testPublicKey, testAmount));
+    });
+  });
+
+  describe('makeOffers', () => {
+    it('should allow a user to make multiple offers', async () => {
+      const [ buyer ] = accounts;
+      const dataHashes = [ testDataHash, testDataHashTwo ];
+      const amounts = [ testAmount, testAmount ];
+
+      await users.register({ from: buyer });
+      await token.approve(staking.address, stakeAmount);
+      await staking.makeStake();
+      await token.approve(instance.address, testAmount * 2);
+      await instance.makeOffers(dataHashes, testPublicKey, amounts);
+      assert.isTrue(await instance.hasOffered(testDataHash));
+      assert.isTrue(await instance.hasOffered(testDataHashTwo));
+    });
+
+    it('shouldnt allow uneven length array arguments', async () => {
+      const [ buyer ] = accounts;
+      const dataHashes = [ testDataHash ];
+      const amounts = [ testAmount, testAmount ];
+
+      await users.register({ from: buyer });
+      await token.approve(staking.address, stakeAmount);
+      await staking.makeStake();
+      await token.approve(instance.address, testAmount * 2);
+      assertRevert(instance.makeOffers(dataHashes, testPublicKey, amounts));
+    });
+
+    it('should not allow dupes', async () => {
+      const [ buyer ] = accounts;
+      const dataHashes = [ testDataHash, testDataHashTwo ];
+      const amounts = [ testAmount, testAmount ];
+
+      await users.register({ from: buyer });
+      await token.approve(staking.address, stakeAmount);
+      await staking.makeStake();
+      await token.approve(instance.address, testAmount * 3);
+      await instance.makeOffer(testDataHashTwo, testPublicKey, testAmount);
+      assertRevert(instance.makeOffers(dataHashes, testPublicKey, amounts));
+      assert.isFalse(await instance.hasOffered(testDataHash));
     });
   });
 
