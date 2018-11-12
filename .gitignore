@@ -62,6 +62,9 @@ typings/
 # next.js build output
 .next
 
+#private-keys.json
+test-private-keys.json
+
 # Build
 /build/
 

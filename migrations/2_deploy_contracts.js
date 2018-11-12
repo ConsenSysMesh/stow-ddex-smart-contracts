@@ -2,8 +2,8 @@ const LinniaOffers = artifacts.require('./LinniaOffers.sol');
 const LinniaStaking = artifacts.require('./LinniaStaking.sol');
 const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
 
-const hubAddress = '0x177bf15e7e703f4980b7ef75a58dc4198f0f1172';
-const tokenAddress = '0x4cdfbdec0aa003116bf030f249a8a7285cd6a184';
+const hubAddress = '0xe2e971fa9a1ace5af8080c7b447339e147926474';
+const tokenAddress = '0x4d7d894b9fe6a113472bcc98edc1db4c9a101cb4';
 
 module.exports = (deployer, network, accounts) => {
 	let ddexHubInstance;
