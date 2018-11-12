@@ -1,5 +1,5 @@
 const TruffleContract = require('truffle-contract');
-const {web3} = require('./config')
+const {web3} = require('./config');
 
 const truffleHack = (contract) => {
   if (typeof contract.currentProvider.sendAsync !== 'function') {
@@ -18,5 +18,5 @@ const getContract = (abi, address) => {
   return contract;
 };
 
-module.exports={getContract}
+module.exports={getContract};
 

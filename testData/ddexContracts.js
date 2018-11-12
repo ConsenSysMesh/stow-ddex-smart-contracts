@@ -1,10 +1,10 @@
-const Hub = require('../build/contracts/LinniaDDEXHub');
-const Staking = require('../build/contracts/LinniaStaking');
-const Offers = require('../build/contracts/LinniaOffers');
 const LINToken = require('@linniaprotocol/linnia-token-contracts/build/contracts/LINToken');
-const LinniaHub = require("@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaHub");
-const LinniaRecords = require("@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaRecords");
-const LinniaPermissions = require("@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaPermissions");
+const LinniaHub = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaHub');
+const LinniaRecords = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaRecords');
+const LinniaPermissions = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaPermissions');
+const Offers = require('../build/contracts/LinniaOffers');
+const Staking = require('../build/contracts/LinniaStaking');
+const Hub = require('../build/contracts/LinniaDDEXHub');
 const { getContract } = require('./contract');
 
 const getDDexContracts = async (address) => {
@@ -33,4 +33,4 @@ const getDDexContracts = async (address) => {
 };
 
 
-module.exports = {getDDexContracts}
+module.exports = {getDDexContracts};
