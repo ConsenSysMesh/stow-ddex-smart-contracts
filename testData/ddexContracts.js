@@ -14,7 +14,7 @@ const getDDexContracts = async (address) => {
   const tokenAddress = await hub.tokenContract();
   const stowHubAddress = await hub.hubContract();
   const stowHub = getContract(StowHub, stowHubAddress);
-  const recordsAddress = await StowHub.recordsContract();
+  const recordsAddress = await stowHub.recordsContract();
   const records = getContract(StowRecords, recordsAddress);
   const permissionsAddress = await stowHub.permissionsContract();
   const permissions = getContract(StowPermissions, permissionsAddress);

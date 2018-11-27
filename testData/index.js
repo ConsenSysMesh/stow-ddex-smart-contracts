@@ -10,7 +10,7 @@ const {sendTokens} = require('./sendTokens');
 const setup = async () => {
   const networkId = await web3.eth.net.getId();
   if(networkId === 3 || networkId === 4 || networkId === 5777) {
-    const ddexHub = DDexHub.networks[networkId].address;
+    const ddexHub = DDexHub.networks[JSON.stringify(networkId)].address;
     const utils = await getDDexContracts(ddexHub);
     const recordEvent = fixWatch(utils.records.StowRecordAdded, 'StowRecordAdded', utils.records);
     const events = await getPastEvents(recordEvent);
