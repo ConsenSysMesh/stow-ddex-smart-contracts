@@ -5,6 +5,7 @@ const {fixWatch, getPastEvents} = require('./events');
 const {setupStakes} = require('./setupStakes');
 const {setupOffers} = require('./setupOffers');
 const {setupApprovals} = require('./setupApprovals');
+const {sendTokens} = require('./sendTokens');
 
 const setup = async () => {
   const networkId = await web3.eth.net.getId();
@@ -14,6 +15,7 @@ const setup = async () => {
     const recordEvent = fixWatch(utils.records.LinniaRecordAdded, 'LinniaRecordAdded', utils.records);
     const events = await getPastEvents(recordEvent);
     utils.events = events.map(event => event.args);
+    await sendTokens(utils);
     await setupStakes(utils);
     await setupOffers(utils);
     await setupApprovals(utils);
