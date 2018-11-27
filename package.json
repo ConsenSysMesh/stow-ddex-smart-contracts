@@ -1,5 +1,5 @@
 {
-  "name": "@linniaprotocol/linnia-ddex-smart-contracts",
+  "name": "@stowprotocol/stow-ddex-smart-contracts",
   "version": "0.1.6",
   "description": "Smart contracts that facilitate the exchange of data",
   "main": "truffle-config.js",
@@ -9,8 +9,9 @@
   ],
   "scripts": {
     "start": "npm run start:testrpc",
-    "start:testrpc": "ganache-cli -p 7545 -i 5777",
-    "migrate": "truffle migrate",
+    "start:testrpc": "ganache-cli -p 7545 -i 5777 -a 61 -m 'drastic outer student holiday hour ordinary reduce absurd clever govern ensure merry keen sound mountain'",
+    "migrate": "truffle migrate --reset",
+    "migrate:dev": "truffle migrate --reset && node testData/index",
     "test": "truffle test",
     "lint:sol": "solium -d contracts",
     "coverage": "solidity-coverage",
@@ -19,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ConsenSys/linnia-ddex-smart-contracts.git"
+    "url": "git+https://github.com/ConsenSys/stow-ddex-smart-contracts.git"
   },
   "keywords": [
     "Linnia",
@@ -30,15 +31,19 @@
   "author": "Max Blaushild",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/ConsenSys/linnia-ddex-smart-contracts/issues"
+    "url": "https://github.com/ConsenSys/stow-ddex-smart-contracts/issues"
   },
-  "homepage": "https://github.com/ConsenSys/linnia-ddex-smart-contracts#readme",
+  "homepage": "https://github.com/ConsenSys/stow-ddex-smart-contracts#readme",
   "dependencies": {
     "@stowprotocol/stow-addresses": "^0.3.3",
     "@stowprotocol/stow-smart-contracts": "^0.1.9",
     "@stowprotocol/stow-token-contracts": "^0.2.0",
+    "dotenv": "^6.0.0",
+    "web3": "^1.0.0-beta.35",
+    "truffle-hdwallet-provider": "^0.0.6",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "truffle-contract": "^3.0.6"
   },
   "devDependencies": {
     "ajv": "^6.5.3",
@@ -56,6 +61,7 @@
     "openzeppelin-solidity": "^1.12.0",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
-    "webpack": "^4.19.0"
+    "webpack": "^4.19.0",
+    "truffle": "^4.1.13"
   }
 }
