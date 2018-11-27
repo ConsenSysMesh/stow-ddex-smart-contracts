@@ -11,9 +11,11 @@ const sendTokens = async (utils) => {
       if(balance.c[0] === 0){
         try{
           console.log(`sending LIN to ${accounts[i]}`);
-  	    return token.transfer(accounts[i].toLowerCase(), seedAmount, {from: accounts[0].toLowerCase(), gas: 500000 });
+  	     return token.transfer(accounts[i].toLowerCase(), seedAmount, {from: accounts[0].toLowerCase(), gas: 500000 });
         }
-        catch(e){console.log(e);}
+        catch(e){
+          console.log(e);
+        }
       }
     }
   });

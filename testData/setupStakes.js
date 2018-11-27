@@ -12,7 +12,7 @@ const setupStakes = async (utils) => {
   	    const stakeAmount = stakeAmountBN.toNumber();
   	    return token.approve(staking.address, stakeAmount, {from: accounts[i].toLowerCase(), gas: 500000}).then(() => {
           staking.makeStake({ from: accounts[i].toLowerCase(), gas: 500000, gasPrice: 1});
-          });
+        });
       }
       catch(e){console.log(e);}
     }
