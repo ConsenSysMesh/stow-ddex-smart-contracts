@@ -1,8 +1,8 @@
 import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
-const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
-const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
-const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
+const STOWToken = artifacts.require('@stowprotocol/stow-token-contracts/contract/STOWToken.sol');
+const StowHub = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowHub.sol');
+const StowDDEXHub = artifacts.require('./StowDDEXHub.sol');
 
 contract('DDexHub', accounts => {
 
@@ -12,19 +12,19 @@ contract('DDexHub', accounts => {
 
   beforeEach('deploy a new DDexHub contract', async () => {
 
-    hub = await LinniaHub.new();
+    hub = await StowHub.new();
 
-    token = await LINToken.new();
+    token = await STOWToken.new();
     await token.unpause();
 
-    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
+    ddexhub = await StowDDEXHub.new(hub.address, token.address);
 
   });
 
   describe('constructor', () => {
 
     it('should set admin correctly', async () => {
-      const newInstance = await LinniaDDEXHub.new(hub.address, token.address);
+      const newInstance = await StowDDEXHub.new(hub.address, token.address);
       assert.equal(await newInstance.owner(), accounts[0]);
     });
 
@@ -43,7 +43,7 @@ contract('DDexHub', accounts => {
   describe('set offers contract', () => {
     it('should allow admin to set offers address', async () => {
       const tx = await ddexhub.setOffersContract(42);
-      assert.equal(tx.logs[0].event, 'LinniaOffersContractSet');
+      assert.equal(tx.logs[0].event, 'StowOffersContractSet');
       assert.equal(tx.logs[0].args.from, 0);
       assert.equal(tx.logs[0].args.to, 42);
       assert.equal(await ddexhub.offersContract(), 42);
@@ -57,7 +57,7 @@ contract('DDexHub', accounts => {
   describe('set staking contract', () => {
     it('should allow admin to set staking address', async () => {
       const tx = await ddexhub.setStakingContract(42);
-      assert.equal(tx.logs[0].event, 'LinniaStakingContractSet');
+      assert.equal(tx.logs[0].event, 'StowStakingContractSet');
       assert.equal(tx.logs[0].args.from, 0);
       assert.equal(tx.logs[0].args.to, 42);
       assert.equal(await ddexhub.stakingContract(), 42);
@@ -73,7 +73,7 @@ contract('DDexHub', accounts => {
   describe('set hub contract to new address', () => {
     it('should allow admin to set hub address', async () => {
       const tx = await ddexhub.setHubContract(42);
-      assert.equal(tx.logs[0].event, 'LinniaHubContractSet');
+      assert.equal(tx.logs[0].event, 'StowHubContractSet');
       assert.equal(tx.logs[0].args.from, hub.address);
       assert.equal(tx.logs[0].args.to, 42);
       assert.equal(await ddexhub.hubContract(), 42);
@@ -89,7 +89,7 @@ contract('DDexHub', accounts => {
   describe('set token contract to new address', () => {
     it('should allow admin to set token address', async () => {
       const tx = await ddexhub.setTokenContract(42);
-      assert.equal(tx.logs[0].event, 'LinniaTokenContractSet');
+      assert.equal(tx.logs[0].event, 'StowTokenContractSet');
       assert.equal(tx.logs[0].args.from, token.address);
       assert.equal(tx.logs[0].args.to, 42);
       assert.equal(await ddexhub.tokenContract(), 42);

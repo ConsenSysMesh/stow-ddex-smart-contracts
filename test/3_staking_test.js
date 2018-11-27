@@ -1,12 +1,12 @@
 import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
-const LinniaStaking = artifacts.require('./LinniaStaking.sol');
-const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
-const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
-const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
-const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
+const StowStaking = artifacts.require('./StowStaking.sol');
+const StowDDEXHub = artifacts.require('./StowDDEXHub.sol');
+const STOWToken = artifacts.require('@stowprotocol/stow-token-contracts/contract/STOWToken.sol');
+const StowHub = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowHub.sol');
+const StowUsers = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowUsers.sol');
 
-contract('LinniaStaking', (accounts) => {
+contract('StowStaking', (accounts) => {
   let ddexhub;
   let hub;
   let users;
@@ -15,23 +15,23 @@ contract('LinniaStaking', (accounts) => {
   let stakeAmount;
 
   beforeEach('deploy a new stake contract', async() => {
-    hub = await LinniaHub.new();
-    users = await LinniaUsers.new(hub.address);
+    hub = await StowHub.new();
+    users = await StowUsers.new(hub.address);
     await hub.setUsersContract(users.address);
-    token = await LINToken.new();
+    token = await STOWToken.new();
     await token.unpause();
-    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
+    ddexhub = await StowDDEXHub.new(hub.address, token.address);
 
-    instance = await LinniaStaking.new(ddexhub.address);
+    instance = await StowStaking.new(ddexhub.address);
     await instance.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });
-    
+
   });
 
-  describe('staking some Linnia:', () => {
+  describe('staking some Stow:', () => {
 
-    it('should allow linnia users with balance to stake after approving transfer', async() => {
+    it('should allow stow users with balance to stake after approving transfer', async() => {
       await users.register();
       await token.approve(instance.address, stakeAmount);
       await instance.makeStake();
@@ -67,7 +67,7 @@ contract('LinniaStaking', (accounts) => {
       assert.equal(newStakeAmount, stakeAmount + 100);
     });
 
-    it('should take the linnia balance from the staker', async() => {
+    it('should take the stow balance from the staker', async() => {
       await users.register();
       const balance = await token.balanceOf(accounts[0]);
       await token.approve(instance.address, stakeAmount);

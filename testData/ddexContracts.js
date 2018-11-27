@@ -1,10 +1,10 @@
-const LINToken = require('@linniaprotocol/linnia-token-contracts/build/contracts/LINToken');
-const LinniaHub = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaHub');
-const LinniaRecords = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaRecords');
-const LinniaPermissions = require('@linniaprotocol/linnia-smart-contracts/build/contracts/LinniaPermissions');
-const Offers = require('../build/contracts/LinniaOffers');
-const Staking = require('../build/contracts/LinniaStaking');
-const Hub = require('../build/contracts/LinniaDDEXHub');
+const STOWToken = require('@stowprotocol/stow-token-contracts/build/contracts/STOWToken');
+const StowHub = require('@stowprotocol/stow-smart-contracts/build/contracts/StowHub');
+const StowRecords = require('@stowprotocol/stow-smart-contracts/build/contracts/StowRecords');
+const StowPermissions = require('@stowprotocol/stow-smart-contracts/build/contracts/StowPermissions');
+const Offers = require('../build/contracts/StowOffers');
+const Staking = require('../build/contracts/StowStaking');
+const Hub = require('../build/contracts/StowDDEXHub');
 const { getContract } = require('./contract');
 
 const getDDexContracts = async (address) => {
@@ -12,15 +12,15 @@ const getDDexContracts = async (address) => {
   const stakingAddress = await hub.stakingContract();
   const offersAddress = await hub.offersContract();
   const tokenAddress = await hub.tokenContract();
-  const linniaHubAddress = await hub.hubContract();
-  const linniaHub = getContract(LinniaHub, linniaHubAddress);
-  const recordsAddress = await linniaHub.recordsContract();
-  const records = getContract(LinniaRecords, recordsAddress);
-  const permissionsAddress = await linniaHub.permissionsContract();
-  const permissions = getContract(LinniaPermissions, permissionsAddress);
+  const stowHubAddress = await hub.hubContract();
+  const stowHub = getContract(StowHub, stowHubAddress);
+  const recordsAddress = await stowHub.recordsContract();
+  const records = getContract(StowRecords, recordsAddress);
+  const permissionsAddress = await stowHub.permissionsContract();
+  const permissions = getContract(StowPermissions, permissionsAddress);
   const staking = getContract(Staking, stakingAddress);
   const offers = getContract(Offers, offersAddress);
-  const token = getContract(LINToken, tokenAddress);
+  const token = getContract(STOWToken, tokenAddress);
 
   return {
     records,

@@ -2,7 +2,7 @@ const {fixWatch, getPastEvents} = require('./events');
 
 const setupApprovals = async (utils) => {
   const {offers, records, permissions} = utils;
-  const offerEvent = fixWatch(offers.LinniaOfferMade, 'LinniaOfferMade', offers);
+  const offerEvent = fixWatch(offers.StowOfferMade, 'StowOfferMade', offers);
   let events = await getPastEvents(offerEvent);
   events = events.map((event) => ({dataHash: event.args.dataHash, buyer: event.args.buyer}));
   const approvalPromises = [];

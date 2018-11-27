@@ -1,5 +1,5 @@
 {
-  "name": "@linniaprotocol/linnia-ddex-smart-contracts",
+  "name": "@stowprotocol/stow-ddex-smart-contracts",
   "version": "0.1.6",
   "description": "Smart contracts that facilitate the exchange of data",
   "main": "truffle-config.js",
@@ -21,22 +21,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ConsenSys/linnia-ddex-smart-contracts.git"
+    "url": "git+https://github.com/ConsenSys/stow-ddex-smart-contracts.git"
   },
   "keywords": [
     "Linnia",
+    "Stow",
     "Ethereum",
     "Solidity"
   ],
   "author": "Max Blaushild",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/ConsenSys/linnia-ddex-smart-contracts/issues"
+    "url": "https://github.com/ConsenSys/stow-ddex-smart-contracts/issues"
   },
-  "homepage": "https://github.com/ConsenSys/linnia-ddex-smart-contracts#readme",
+  "homepage": "https://github.com/ConsenSys/stow-ddex-smart-contracts#readme",
   "dependencies": {
-    "@linniaprotocol/linnia-smart-contracts": "^0.1.8",
-    "@linniaprotocol/linnia-token-contracts": "^0.1.0",
+    "@stowprotocol/stow-addresses": "^0.3.3",
+    "@stowprotocol/stow-smart-contracts": "^0.1.9",
+    "@stowprotocol/stow-token-contracts": "^0.2.0",
     "dotenv": "^6.0.0",
     "truffle-hdwallet-provider": "git+https://github.com/vrotmanh/truffle-hdwallet-provider",
     "truffle-hdwallet-provider-privkey": "^0.2.0",
