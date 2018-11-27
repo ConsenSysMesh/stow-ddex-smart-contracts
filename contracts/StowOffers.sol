@@ -1,13 +1,13 @@
 pragma solidity 0.4.24;
 
-import "./LinniaDDEXHub.sol";
+import "./StowDDEXHub.sol";
 
 /**
- * @title Linnia Offer Contract
+ * @title Stow Offer Contract
  */
 
 
-contract LinniaOffers {
+contract StowOffers {
 
     /** Struct of an offer being made
     * @prop hasOffered Used to check whether the offer exists *
@@ -22,19 +22,19 @@ contract LinniaOffers {
         bytes publicKey;
     }
 
-    event LinniaOfferMade(
+    event StowOfferMade(
         bytes32 indexed dataHash, address indexed buyer, uint amount
     );
 
-    event LinniaOfferFulfilled(
+    event StowOfferFulfilled(
         bytes32 indexed dataHash, address indexed buyer
     );
 
-    event LinniaOfferRevoked(
+    event StowOfferRevoked(
         bytes32 indexed dataHash, address indexed buyer
     );
 
-    LinniaDDEXHub public ddexhub;
+    StowDDEXHub public ddexhub;
 
     /* All offers being made */
     /* dataHash => buyer address => offer */
@@ -73,7 +73,7 @@ contract LinniaOffers {
     }
 
     /* Constructor */
-    constructor(LinniaDDEXHub _ddexhub) public {
+    constructor(StowDDEXHub _ddexhub) public {
         ddexhub = _ddexhub;
     }
 
@@ -110,7 +110,7 @@ contract LinniaOffers {
         });
 
         /* @dev Emit event for caching purposes */
-        emit LinniaOfferMade(dataHash, msg.sender, amount);
+        emit StowOfferMade(dataHash, msg.sender, amount);
 
         return true;
     }
@@ -176,7 +176,7 @@ contract LinniaOffers {
         ddexhub.tokenContract().transfer(msg.sender, offers[dataHash][msg.sender].amount);
 
         /* @dev Emit event for caching purposes */
-        emit LinniaOfferRevoked(dataHash, msg.sender);
+        emit StowOfferRevoked(dataHash, msg.sender);
 
         return true;
     }
@@ -212,7 +212,7 @@ contract LinniaOffers {
         offers[dataHash][msg.sender].isFulfilled = true;
 
         /* @dev Emit event for caching purposes */
-        emit LinniaOfferFulfilled(dataHash, msg.sender);
+        emit StowOfferFulfilled(dataHash, msg.sender);
 
         return true;
     }

@@ -23,6 +23,7 @@
   },
   "keywords": [
     "Linnia",
+    "Stow",
     "Ethereum",
     "Solidity"
   ],
@@ -33,8 +34,9 @@
   },
   "homepage": "https://github.com/ConsenSys/linnia-ddex-smart-contracts#readme",
   "dependencies": {
-    "@linniaprotocol/linnia-smart-contracts": "^0.1.2",
-    "@linniaprotocol/linnia-token-contracts": "^0.1.0",
+    "@stowprotocol/stow-addresses": "^0.3.3",
+    "@stowprotocol/stow-smart-contracts": "^0.1.9",
+    "@stowprotocol/stow-token-contracts": "^0.2.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0"
   },

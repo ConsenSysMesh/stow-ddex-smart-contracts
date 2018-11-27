@@ -1,14 +1,14 @@
 import eutil from 'ethereumjs-util';
 import { assertRevert } from 'openzeppelin-solidity/test/helpers/assertRevert';
 
-const LinniaOffers = artifacts.require('./LinniaOffers.sol');
-const LinniaStaking = artifacts.require('./LinniaStaking.sol');
-const LinniaDDEXHub = artifacts.require('./LinniaDDEXHub.sol');
-const LINToken = artifacts.require('@linniaprotocol/linnia-token-contracts/contract/LINToken.sol');
-const LinniaHub = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaHub.sol');
-const LinniaUsers = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaUsers.sol');
-const LinniaRecords = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaRecords.sol');
-const LinniaPermissions = artifacts.require('@linniaprotocol/linnia-smart-contracts/contract/LinniaPermissions.sol');
+const StowOffers = artifacts.require('./StowOffers.sol');
+const StowStaking = artifacts.require('./StowStaking.sol');
+const StowDDEXHub = artifacts.require('./StowDDEXHub.sol');
+const STOWToken = artifacts.require('@stowprotocol/stow-token-contracts/contract/STOWToken.sol');
+const StowHub = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowHub.sol');
+const StowUsers = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowUsers.sol');
+const StowRecords = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowRecords.sol');
+const StowPermissions = artifacts.require('@stowprotocol/stow-smart-contracts/contract/StowPermissions.sol');
 
 const testDataContent = '{"foo":"bar","baz":42}';
 const testDataContentTwo = '{"bar": "baz"}';
@@ -20,7 +20,7 @@ const testMetadata = 'yessirimmetadata';
 const testDataUri = 'i-am-a-uri';
 const testPublicKey = 'g8R3h9lGMiXkX7o8pxqkkOn1ZO/sE0GDT/daKBSsN1A=';
 
-contract('LinniaOffers', (accounts) => {
+contract('StowOffers', (accounts) => {
   let ddexhub;
   let hub;
   let users;
@@ -32,32 +32,32 @@ contract('LinniaOffers', (accounts) => {
   let permissions;
 
   beforeEach('deploy a new offers contract', async () => {
-    hub = await LinniaHub.new();
-    users = await LinniaUsers.new(hub.address);
-    records = await LinniaRecords.new(hub.address);
-    permissions = await LinniaPermissions.new(hub.address);
+    hub = await StowHub.new();
+    users = await StowUsers.new(hub.address);
+    records = await StowRecords.new(hub.address);
+    permissions = await StowPermissions.new(hub.address);
 
     await hub.setRecordsContract(records.address);
     await hub.setUsersContract(users.address);
     await hub.setPermissionsContract(permissions.address);
 
-    token = await LINToken.new();
+    token = await STOWToken.new();
     await token.unpause();
 
-    ddexhub = await LinniaDDEXHub.new(hub.address, token.address);
+    ddexhub = await StowDDEXHub.new(hub.address, token.address);
 
-    staking = await LinniaStaking.new(ddexhub.address);
+    staking = await StowStaking.new(ddexhub.address);
     await staking.stakeAmount().then(stakeAmountBN => {
       stakeAmount = stakeAmountBN.toNumber();
     });
 
     await ddexhub.setStakingContract(staking.address);
 
-    instance = await LinniaOffers.new(ddexhub.address);
+    instance = await StowOffers.new(ddexhub.address);
   });
 
   describe('makeOffer:', () => {
-    it('should allow linnia users with balance to make offers after staking and approving transfer', async () => {
+    it('should allow stow users with balance to make offers after staking and approving transfer', async () => {
       await users.register();
       await token.approve(staking.address, stakeAmount);
       await staking.makeStake();
@@ -65,7 +65,7 @@ contract('LinniaOffers', (accounts) => {
       await instance.makeOffer(testDataHash, testPublicKey, testAmount);
     });
 
-    it('should not allow linnia users with balance to make offers without staking', async () => {
+    it('should not allow stow users with balance to make offers without staking', async () => {
       await users.register();
       await token.approve(instance.address, testAmount);
       assertRevert(instance.makeOffer(testDataHash, testPublicKey, testAmount));
@@ -84,7 +84,7 @@ contract('LinniaOffers', (accounts) => {
       assert.equal(isFulfilled, false);
     });
 
-    it('should take the linnia balance from the offerer', async () => {
+    it('should take the stow balance from the offerer', async () => {
       await users.register();
       await token.approve(staking.address, stakeAmount);
       await staking.makeStake();
@@ -183,7 +183,7 @@ contract('LinniaOffers', (accounts) => {
       await instance.approveOffer(testDataHash, buyer, { from: seller });
     });
 
-    it('should give the seller the LIN', async () => {
+    it('should give the seller the STOW', async () => {
       const [ buyer, seller ] = accounts;
       await users.register({ from: buyer });
       await users.register({ from: seller });
